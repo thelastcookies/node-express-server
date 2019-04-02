@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/signin.css">
+
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="js/cookie.js"></script>
+    <script>
+        $(function () {
+            $("#signin").on("click", function (e){
+                e.preventDefault();
+                let username = $("#username").val();
+                let password = $("#password").val();
+                $.ajax({
+                    url: 'signin/userVal',
+                    data: {
+                        "username": username,
+                        "password": password
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    headers: {
+                        "Access-Control-Allow-Origin":"http://example.edu",
+                        "Access-Control-Allow-Headers":"X-Requested-With"
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (XMLHttpRequset, textStatus, errorThrown) {
+                        console.log (XMLHttpRequset);
+                        console.log (textStatus);
+                        console.log (errorThrown);
+                    }
+                });
+                setCookie("username", $("input#username").val(), "7");
+
+            });
+        })
+    </script>
+</head>
+<body style="background: url('img/workbench.jpg');background-repeat: repeat-y;background-size: cover;">
+<header>
+
+</header>
+<section>
+    <div class="login-box">
+        <div class="login-box-content">
+            <div class="login-logo">
+                <a href="/">
+                    <img src="img/logo-white.png" alt="" style="height: 50px; width: auto;">
+                    拾货</a>
+            </div>
+            <div class="login-box-body">
+                <p class="login-box-msg">
+                    用户登录
+                </p>
+                <form id="loginForm" class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="text" id="username" name="username" placeholder="用户名" maxlength="100" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="password" id="password" name="password" placeholder="密码" maxlength="100" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <button id="signin" class="btn btn-primary btn-block">登录</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-4 text-left">
+                            <a href="./signup">注册</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+
+</footer>
+
+</body>
+</html>

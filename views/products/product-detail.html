@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src=/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button target="#navbar-collapse-01" toggle="collapse" class="navbar-toggle" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand" style="padding: 8px;"><img style="height: 100%;" src="../img/logo-black.png" alt=""></a>
+            </div>
+            <div id="navbar-collapse-01" class="navbar-collapse collapse"  style="height: 0.8px;">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/products/edit">发布</a></li>
+                    <li class="dropdown" id="personal">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/products">我的出售物品</a></li>
+                            <li><a href="/order">我的交易</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/user">当前账号：</a></li>
+                            <li><a href="/user/modify">修改我的账号</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">登出</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="signin">登录/注册</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<section>
+    <div class="content-box container" id="productDetails">
+        <div class="content">
+            <div class="row">
+                <div style="margin-bottom: 15px;">
+                    <a onclick="window.history.go(-1);">&lt;返回上一页</a>
+                </div>
+            </div>
+            <div class="row">
+                <div style="width: 360px;height: 270px; position: relative;background-color: #f8f8f8; overflow: hidden;" title="点击看大图" class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <img id="myImg" style="width: 100%; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;" data-ng-src="{{product.image_url}}" alt="{{product.name}}">
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <h3 data-ng-bind="product.name"></h3>
+                    <div data-ng-show="authentication.user._id === product.creator._id">
+                        <a href="/#!/products/offer/{{product._id}}/edit">修改</a>
+                        <a href="#" data-ng-click="delete()">删除</a>
+                    </div>
+                    <p>上传时间：<span data-ng-bind="product.created | date:'y/MM/dd'"></span></p>
+                    <p>上传者：<span data-ng-bind="product.creator.username"></span></p>
+                    <p>交易方式：<span data-ng-bind="product.way"></span><span data-ng-show="product.exchange_or_not"> / 交换</span></p>
+                    <p data-ng-show="product.exchange_or_not">交换条件：</p>
+                    <p data-ng-show="product.exchange_or_not" data-ng-bind="product.exchange_condition"></p>
+                    <p>所属分类：<span data-ng-bind="product.category"></span></p>
+                    <button ng-if="product.creator._id != authentication.user._id" ng-controller="TradeOrderController" ng-click="create()" class="btn btn-primary">交易</button>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="title">详情描述</h3>
+                    <p data-ng-bind="product.details"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
