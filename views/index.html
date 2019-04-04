@@ -18,13 +18,21 @@
         $(function() {
             if(getCookie("username")) {
                 $("#personal").css("display", "block");
+                $("#signin").css("display", "none");
+
             }
             else if (!getCookie("username")) {
                 $("#personal").css("display", "none");
+                $("#signin").css("display", "block");
             }
             else {
                 return "";
             }
+
+            $("#sign-out").on ("click", function () {
+                setCookie("username", $("input#username").val(), 0);
+                window.location.reload();
+            });
         });
     </script>
 
@@ -56,38 +64,46 @@
                             <li><a href="/user">当前账号：</a></li>
                             <li><a href="/user/modify">修改我的账号</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">登出</a></li>
+                            <li id = "sign-out"><a href="#">登出</a></li>
                         </ul>
                     </li>
-                    <li><a href="signin">登录/注册</a></li>
+                    <li id = "signin"><a href="signin">登录/注册</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-<section>
-    <div class="search container">
-        <form class="form-inline">
-            <div class="form-group">
-                <input type="text" class="form-control" id="name" placeholder="请输入关键字">
+<section class="search container">
+    <form class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="请输入关键字">
+        </div>
+        <div class="form-group">
+            <div class="col-lg-9">
+                <select name="category" id="category" class="form-control" >
+                    <option value="">全部分类</option>
+                    <option value="书籍">书籍</option>
+                    <option value="衣物">衣物</option>
+                    <option value="电子产品">电子产品</option>
+                    <option value="日常用品">日常用品</option>
+                    <option value="其它">其它</option>
+                </select>
             </div>
-            <div class="form-group">
-                <div class="col-lg-9">
-                    <select name="category" id="category" class="form-control" >
-                        <option value="">全部分类</option>
-                        <option value="书籍">书籍</option>
-                        <option value="衣物">衣物</option>
-                        <option value="电子产品">电子产品</option>
-                        <option value="日常用品">日常用品</option>
-                        <option value="其它">其它</option>
-                    </select>
-                </div>
-            </div>
-            <button type="button" class="btn btn-default">查找</button>
-        </form>
+        </div>
+        <button type="button" class="btn btn-default">查找</button>
+    </form>
+</section>
+<section class="container" id="product-list">
+    <div class = "row">
+    <div id="product-item" class="col-md-3">
+        <a href="#">
+        <img src="http://img2.99114.com/group1/M00/42/06/wKgGTFkXdA6AWOAbAATxBuFDbEU635_600_600.jpg" alt="牛仔裤" class="img-responsive img-rounded">
+        </a>
+            <h4>牛仔裤</h4>
+        <p>￥300</p>
+    </div>
     </div>
 </section>
-
 <footer>
 
 </footer>

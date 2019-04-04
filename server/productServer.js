@@ -1,29 +1,27 @@
 let mysql = require('mysql');
 let mysqlConf = require('../config/mysqlConf');
 let pool = mysql.createPool(mysqlConf.mysql);
+let resResult = require('../config/resConf');
 
-const userSqlMap = {
-    addUser: 'insert into user (username, password) values (?, ?)',
-    userVal: 'select password from user where username = ?',
-    getUserById: 'select * from user where id = ?',
-    delUserById: 'delete from user where id = ?',
-    updateUser: 'update user set username = ?, password = ? where id = ?',
-    getUserList: 'select * from user',
+
+const productSqlMap = {
+    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) select ?, ?, ?, ?, ?, USERID from `user` where USERNAME = ?',
+    getProductById: 'select * from product where PRODUCTID = ?',
+    getProductByUSER: 'select * from product where OWNID = (select USERID from user where username = ?)',
+    getProductList: 'select * from product',
+    delProductById: 'delete from product where PRODUCTID = ?',
 };
 
 module.exports = {
-    addUser: function (user, callback) {
-        pool.query (userSqlMap.addUser, [user.username, user.password], function (error, result) {
-            if (error) throw error;
-            callback (result.affectedRows > 0);
-        });
-    },
-    userVal: function (username, callback) {
-        pool.query (userSqlMap.userVal, username, function (error, result) {
-            if (error) throw error;
-            callback (result[0]);
+    productAdd: function (productData, callback) {
+        pool.query (productSqlMap.productAdd, [productData.name, productData.price, productData.details, productData.image, productData.category, productData.username], function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            callback (res);
         });
     }
+
 };
 
 

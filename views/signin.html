@@ -16,7 +16,7 @@
                 let username = $("#username").val();
                 let password = $("#password").val();
                 $.ajax({
-                    url: 'signin/userVal',
+                    url: '/userVal',
                     data: {
                         "username": username,
                         "password": password
@@ -27,8 +27,14 @@
                         "Access-Control-Allow-Origin":"http://example.edu",
                         "Access-Control-Allow-Headers":"X-Requested-With"
                     },
-                    success: function (data) {
-                        console.log(data);
+                    success: function (status) {
+                        console.log(status);
+                        if (!status) {
+                            alert ("用户名或密码错误");
+                            return ;
+                        }
+                        setCookie("username", $("input#username").val(), "7");
+                        window.location.href = "/";
                     },
                     error: function (XMLHttpRequset, textStatus, errorThrown) {
                         console.log (XMLHttpRequset);
@@ -36,7 +42,6 @@
                         console.log (errorThrown);
                     }
                 });
-                setCookie("username", $("input#username").val(), "7");
 
             });
         })

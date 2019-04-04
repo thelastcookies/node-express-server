@@ -9,6 +9,52 @@
 
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
+        $(function () {
+            $("#submit").on("click", function (e) {
+                e.preventDefault();
+                let password = $("#password").val();
+                let passwordAgain = $("#passwordAgain").val();
+                if (password !== passwordAgain) {
+                    alert("两次输入的密码不一致");
+                    return ;
+                }
+                else {
+                    let username = $("#username").val();
+                    let mobile = $("#mobile").val();
+                    $.ajax({
+                        url: '/userAdd',
+                        data: {
+                            "username": username,
+                            "password": password,
+                            "mobile": mobile
+                        },
+                        type: 'post',
+                        dataType: 'json',
+                        headers: {
+                            "Access-Control-Allow-Origin":"http://example.edu",
+                            "Access-Control-Allow-Headers":"X-Requested-With"
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.status === 0) {
+                                alert("注册成功");
+                                window.location.href = './signin';
+                            }
+                            else if (data.status === 1062) {
+                                alert("该用户名已被占用!\n" + data.errMsg);
+                            }
+                        },
+                        error: function (XMLHttpRequset, textStatus, errorThrown) {
+                            console.log (XMLHttpRequset);
+                            console.log (textStatus);
+                            console.log (errorThrown);
+                        }
+                    });
+                }
+            })
+        })
+    </script>
 
 </head>
 <body style="background: url('img/workbench.jpg');background-repeat: repeat-y;background-size: cover;">
@@ -28,30 +74,31 @@
                 <p class="login-box-msg">
                     用户注册
                 </p>
-                <form action="/signup" id="loginForm" method="post" class="form-horizontal">
+                <form id="loginForm"  class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <input type="text" id="username" name="username" placeholder="用户名" maxlength="100" class="form-control" required>
+                            <input type="text" id="username" name="username" placeholder="用户名" maxlength="100" class="form-control" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <input type="password" id="password" name="password" placeholder="密码" maxlength="100" class="form-control" required>
+                            <input type="password" id="password" name="password" placeholder="密码" maxlength="100" class="form-control" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <input type="password" id="passwordAgain" name="passwordAgain" placeholder="确认密码" maxlength="100" class="form-control" required>
+                            <input type="password" id="passwordAgain" name="passwordAgain" placeholder="确认密码" maxlength="100" class="form-control" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 col-xs-12">
-                            <input type="text" id="mobile" name="mobile" placeholder="手机号码" maxlength="11" class="form-control" required>
+                            <input type="text" id="mobile" name="mobile" placeholder="手机号码" maxlength="11" class="form-control" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <input type="submit" value="注册" class="btn btn-primary btn-block">
+                            <input type="submit" value="注册" class="btn btn-primary btn-block" />
+                            <button id="submit" class="btn btn-primary btn-block">注册</button>
                         </div>
                     </div>
                     <div class="form-group">

@@ -11,8 +11,8 @@ const bodyParser = require('body-parser');
 // pages
 let router = require('./routes/router');
 
-//api
-let userApi = require('./api/userApi');
+//server
+// let user_server = require('./routes/user.server.route');
 
 var app = express();
 
@@ -23,15 +23,19 @@ app.set('view engine', 'html');
 // app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    "extended": "true",
+    "limit": "2mb"
+}));
+app.use(bodyParser.json({ "limit": "2mb"}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // pages
 app.use('/', router);
-// api
+// server
 // app.use('/user', userApi);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
