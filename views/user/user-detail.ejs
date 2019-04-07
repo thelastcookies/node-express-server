@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/js/cookie.js"></script>
+
+    <script>
+        $(function() {
+            if (getCookie ("username")) {
+                $ ("#personal").css ("display", "block");
+                $ ("#signin").css ("display", "none");
+
+            }
+            else if (!getCookie ("username")) {
+                $ ("#personal").css ("display", "none");
+                $ ("#signin").css ("display", "block");
+            }
+            else {
+                return "";
+            }
+        });
+    </script>
+</head>
+<body>
+<header>
+    <%- include('../header', {username: username}); %>
+
+</header>
+<section>
+    <div>
+        <table class="table" style="max-width: 300px;margin: 0 auto;">
+            <caption style="text-align: center;">当前用户资料</caption>
+            <tr>
+                <td>用户名：</td><td><%= user.USERNAME %></td>
+            </tr>
+            <tr>
+                <td>手机号：</td><td><%= user.MOBILE %></td>
+            </tr>
+            <tr>
+                <td>地址：</td><td><%= user.ADDRESS %></td>
+            </tr>
+            <tr>
+                <td>微信号：</td><td><%= user.WECHAT %></td>
+            </tr>
+            <tr>
+                <td>QQ号：</td><td><%= user.QQ %></td>
+            </tr>
+        </table>
+        <button></button>
+    </div>
+</section>
+</body>
+</html>

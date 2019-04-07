@@ -7,8 +7,8 @@ let resResult = require('../config/resConf');
 const productSqlMap = {
     productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) select ?, ?, ?, ?, ?, USERID from `user` where USERNAME = ?',
     getProductById: 'select * from product where PRODUCTID = ?',
-    getProductByUSER: 'select * from product where OWNID = (select USERID from user where username = ?)',
-    getProductList: 'select * from product',
+    getProductsByUSER: 'select * from product where OWNID = (select USERID from user where username = ?)',
+    getProductsList: 'select * from product',
     delProductById: 'delete from product where PRODUCTID = ?',
 };
 
@@ -18,6 +18,43 @@ module.exports = {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
+            callback (res);
+        });
+    },
+    productList: function (callback) {
+        pool.query (productSqlMap.getProductsList, '', function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            result.forEach(function(item, index) {
+                item.PIC = item.PIC.toString('utf8');
+
+            });
+            res.setData(result);
+            callback (res);
+        });
+    },
+    // 单个商品
+    getProductByID: function (productID, callback) {
+        pool.query (productSqlMap.getProductById, productID, function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            result[0].PIC = result[0].PIC.toString('utf8');
+            res.setData(result[0]);
+            callback (res);
+        });
+    },
+    // 用户出售商品
+    getProductsByUSER: function (username, callback) {
+        pool.query (productSqlMap.getProductsByUSER, username, function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            result.forEach(function(item, index) {
+                item.PIC = item.PIC.toString('utf8');
+            });
+            res.setData(result);
             callback (res);
         });
     }

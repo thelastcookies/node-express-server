@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/js/cookie.js"></script>
+
+    <script>
+        let imgSrc = null;
+        $(function() {
+            if (getCookie ("username")) {
+                $ ("#personal").css ("display", "block");
+                $ ("#signin").css ("display", "none");
+
+            }
+            else if (!getCookie ("username")) {
+                $ ("#personal").css ("display", "none");
+                $ ("#signin").css ("display", "block");
+            }
+            else {
+                return "";
+            }
+
+            // let catg = $("#category").val();
+            // $("option[value='"+ catg +"']").attr("selected","selected")
+
+            $("#submit").on("click", function (e) {
+                e.preventDefault();
+                let name = $("#name").val();
+                let category = $("#category").val();
+                let price = $("#price").val();
+                let details = $("#details").val();
+                let username = getCookie('username');
+                $.ajax({
+                    url: '/productModify',
+                    data: {
+                        "name": name,
+                        "category": category,
+                        "price": price,
+                        "details": details,
+                        "image": imgSrc,
+                        "username": username
+                    },
+                    type: 'post',
+                    dataType: 'json',
+                    headers: {
+                        "Access-Control-Allow-Origin":"http://example.edu",
+                        "Access-Control-Allow-Headers":"X-Requested-With"
+                    },
+                    success: function (status) {
+                        console.log(status);
+                        if (status) {
+                            alert ("商品添加错误！");
+                            return ;
+                        }
+                        alert("商品添加成功！");
+                        window.location.href = "/products";
+                    },
+                    error: function (XMLHttpRequset, textStatus, errorThrown) {
+                        console.log (XMLHttpRequset);
+                        console.log (textStatus);
+                        console.log (errorThrown);
+                    }
+                });
+
+            });
+        });
+
+        function imgUpload (e) {
+            let img = e.target.files[0];
+            if (img.size > 1024 * 1024 * 2) {
+                alert('图片大小不能超过 2MB!');
+                return false;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function() {
+                imgSrc = this.result;  //图片base64字符串
+            };
+            reader.readAsDataURL(img);    //Base64
+        }
+    </script>
+</head>
+<body>
+<header>
+    <%- include('../header', {username: username}); %>
+
+</header>
+<section>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">发布出售物品</div>
+        <div class="panel-body">
+
+                <form class="form-horizontal" novalidate enctype="multipart/form-data" name="create_product" id="create_product">
+                <!--name-->
+                <div class="form-group">
+                    <label for="name" class="control-label col-lg-3">物品名称</label>
+                    <div class="col-lg-9">
+                        <input required type="text" id="name" name="name" class="form-control" value="<%= product.PRODUCTNAME %>">
+                    </div>
+                </div>
+                <!--category-->
+                <div class="form-group">
+                    <label for="category" class="col-lg-3 control-label">分类</label>
+                    <div class="col-lg-9">
+                            <select required name="category" id="category" class="form-control" value="<%= product.CATG %>">
+                                <option value="">请选择分类</option>
+                                <option value="书籍" <% product.CATG === "书籍"? selected = "selected" : "" %>>书籍</option>
+                                <option value="衣物" <% product.CATG === "衣物"? selected = "selected" : "" %>>衣物</option>
+                                <option value="电子产品" <% product.CATG === "电子产品"? selected = "selected" : "" %>>电子产品</option>
+                                <option value="日常用品" <% product.CATG === "日常用品"? selected = "selected" : "" %>>日常用品</option>
+                                <option value="其它" <% product.CATG === "其它"? selected = "selected" : "" %>>其它</option>
+                            </select>
+                    </div>
+                </div>
+                <!--image-->
+                <div class="form-group">
+                    <label for="image" class="control-label col-lg-3">图片</label>
+                    <div class="col-lg-9">
+                        <input type="file" accept="image/*" name="image" id="upImage" onchange="imgUpload(event)" />
+                    </div>
+                </div>
+                <!--price-->
+                <div class="form-group">
+                    <label for="price" class="control-label col-lg-3">价格</label>
+                    <div class="col-lg-9">
+                        <div class="input-group">
+                            <span class="input-group-addon">￥</span>
+                            <input required class="form-control" type="text" id="price" name="price" value = <%= product.PRICE %>>
+                        </div>
+                    </div>
+                </div>
+                <!--details-->
+                <div class="form-group">
+                    <label for="details" class="control-label col-lg-3">详情描述</label>
+                    <div class="col-lg-9">
+                        <textarea required class="form-control" name="details" id="details" cols="30" rows="5"><%= product.DETAIL %></textarea>
+                    </div>
+                </div>
+                <!--submit-->
+                <div class="form-group">
+                    <div class="col-lg-offset-3 col-lg-9">
+                        <button class="btn btn-primary" id="submit">发布</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</section>
+</body>
+</html>

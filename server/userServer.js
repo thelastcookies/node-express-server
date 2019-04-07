@@ -5,10 +5,10 @@ let resResult = require('../config/resConf');
 
 const userSqlMap = {
     userAdd: 'insert into user (username, password, mobile) values (?, ?, ?)',
-    userVal: 'select password from user where username = ?',
-    getUserById: 'select * from user where id = ?',
-    delUserById: 'delete from user where id = ?',
-    updateUser: 'update user set username = ?, password = ? where id = ?',
+    userVal: 'select userid, password from user where username = ?',
+    getUserByName: 'select * from user where username = ?',
+    delUserByName: 'delete from user where username = ?',
+    // updateUser: 'update user set username = ?, password = ? where username = ?',
     getUserList: 'select * from user',
 };
 
@@ -19,10 +19,20 @@ module.exports = {
     //         callback (result.affectedRows > 0);
     //     });
     // },
-    userVal: function (username, callback) {
+    userVal: function (username, password, callback) {
         pool.query (userSqlMap.userVal, username, function (error, result) {
-            if (error) throw error;
-            callback (result[0]);
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            if (result[0] && result[0].password === password) {
+                res.setData({
+                    valStatus: true,
+                    userID: result[0].userid
+                });
+            } else {
+                res.setData({status: false});
+            }
+            callback (res);
         });
     },
     userAdd: function (userData, callback) {
@@ -30,6 +40,15 @@ module.exports = {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
+            callback (res);
+        });
+    },
+    getUserByName: function (username, callback) {
+        pool.query (userSqlMap.getUserByName, username, function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            res.setData(result[0]);
             callback (res);
         });
     }

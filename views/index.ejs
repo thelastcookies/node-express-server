@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/index.css">
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/js/cookie.js"></script>
+    <style>
+        li#personal {
+            display: none;
+        }
+    </style>
+    <script>
+        $(function() {
+            $.ajax({
+                url: '/productsList',
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    "Access-Control-Allow-Origin":"http://example.edu",
+                    "Access-Control-Allow-Headers":"X-Requested-With"
+                },
+                success: function (res) {
+                    if(res.status) {
+                        alert('Server Error!')
+                        return;
+                    }
+                    let dataArr = res.data;
+                    if(dataArr.length === 0) {
+                        $("#product-empty").css("display", "block");
+                        $("#product-list-container").css("display", "none");
+                    }
+                    else {
+                        $("#product-list-container").css("display", "block");
+                        $("#product-empty").css("display", "none");
+                        let htmlStr = '';
+                        dataArr.forEach(function (item, index) {
+                            htmlStr += '<article class="my-item"><a href="/products/detail/' + item.PRODUCTID
+                                + '"><div class="my-img-wrap"><img src="' + item.PIC + '" alt="' + item.PRODUCTNAME
+                                + '"></div></a><div class="my-summary"><a href="/products/' + item.PRODUCTID
+                                + '"><h4 class="cutOff">' + item.PRODUCTNAME + '</h4></a><p><span class="my-price">￥<span id="price">' + item.PRICE
+                                + '</span></span><span class="creator"> / <span id="username">' + item.OWNID
+                                + '</span></span></p><p><span id="purchase">购买</span></p><p class="cutOff" id="details">' + item.DETAIL
+                                + '</p></div></article>'
+                        });
+                        $("#product-list").html(htmlStr);
+                    }
+                },
+                error: function (XMLHttpRequset, textStatus, errorThrown) {
+                    console.log (XMLHttpRequset);
+                    console.log (textStatus);
+                    console.log (errorThrown);
+                }
+            });
+            if(getCookie("username")) {
+                $("#personal").css("display", "block");
+                $("#signin").css("display", "none");
+
+            }
+            else if (!getCookie("username")) {
+                $("#personal").css("display", "none");
+                $("#signin").css("display", "block");
+            }
+            else {
+                return "";
+            }
+
+            $("#sign-out").on ("click", function () {
+                setCookie("username", $("input#username").val(), 0);
+                window.location.reload();
+            });
+        });
+    </script>
+
+
+
+</head>
+<body>
+<header>
+    <%- include('header', {username: username}); %>
+</header>
+<section class="search container">
+        <form class="form-inline">
+            <div class="form-group">
+                <input type="text" class="form-control" id="name" placeholder="请输入关键字">
+            </div>
+            <div class="form-group">
+                <div class="col-lg-9">
+                    <select name="category" id="category" class="form-control" >
+                        <option value="">全部分类</option>
+                        <option value="书籍">书籍</option>
+                        <option value="衣物">衣物</option>
+                        <option value="电子产品">电子产品</option>
+                        <option value="日常用品">日常用品</option>
+                        <option value="其它">其它</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default">查找</button>
+        </form>
+</section>
+
+<div class="container content" id="list-products">
+    <div id="product-empty">
+        还没有物品，你要 <a ng-click="renderCreate()" class="createProduct">创建一个</a>吗？
+        <!--还没有物品，你要 <a href="/#!/createRoute">创建一个</a>吗？-->
+    </div>
+
+    <div class="row my-container" id="product-list-container">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="product-list">
+
+        </div>
+    </div>
+</div>
+<footer>
+
+</footer>
+</body>
+</html>
