@@ -26,6 +26,13 @@ router.get('/order/detail/:detailid', function(req, res, next) {
         res.render('order/order-detail', { username: req.cookies.username, orderDetail: data.data });
     });
 });
+router.get('/setOrderStatus', function(req, res, next) {
+    let order_id = req.query.order_id;
+    let order_status = req.query.order_status;
+    orderServer.setOrderStatus(order_id, order_status, function (data) {
+        res.send (data);
+    });
+});
 //　主页获取商品列表
 router.get('/productsList', function(req, res, next) {
     console.log(req);

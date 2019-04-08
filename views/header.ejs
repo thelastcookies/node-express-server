@@ -16,13 +16,13 @@
                 <li class="dropdown" id="personal">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心 <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/products/list/<%= username %>">我的出售物品</a></li>
+                        <li><a href="/products/list/<%= username %>">我的物品</a></li>
                         <li><a href="/order/<%= username %>">我的订单</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="/user/<%= username %>">当前账号：</a></li>
+                        <li><a href="/user/<%= username %>">当前账号：<%= username %></a></li>
                         <li><a href="/user/<%= username %>/modify">修改我的账号</a></li>
                         <li role="separator" class="divider"></li>
-                        <li id = "sign-out"><a href="#">登出</a></li>
+                        <li id = "sign-out"><a href="#" onclick="signOut()">登出</a></li>
                     </ul>
                 </li>
                 <% } else { %>

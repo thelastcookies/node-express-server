@@ -9,6 +9,7 @@
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/js/cookie.js"></script>
+    <script src="/js/common.js"></script>
     <style>
         li#personal {
             display: none;
@@ -68,11 +69,6 @@
             else {
                 return "";
             }
-
-            $("#sign-out").on ("click", function () {
-                setCookie("username", $("input#username").val(), 0);
-                window.location.reload();
-            });
         });
     </script>
 

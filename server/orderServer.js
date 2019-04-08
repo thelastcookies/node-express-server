@@ -6,11 +6,11 @@ let moment = require('moment');
 
 
 const orderSqlMap = {
-    orderCreate: 'insert into order (productname, produciid, ownerid, buyerid, status) values (?, ?, ?, ?, ?)',
+    orderCreate: 'insert into `order` (productname, produciid, ownerid, buyerid, status) values (?, ?, ?, ?, ?)',
     getOrderDetailById: 'call order_detail (?)',
     getOrderByUSER: 'select * from `order` where ownerid = ? or buyerid = ?',
-    setOrderStatus: 'update order set status = ? where orderid = ?',
-    delOrderById: 'delete from order where orderid = ?',
+    setOrderStatus: 'update `order` set status = ? where orderid = ?',
+    delOrderById: 'delete from `order` where orderid = ?',
 };
 
 module.exports = {
@@ -51,7 +51,7 @@ module.exports = {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
-            if (res.status === 0) {
+            if (res.status === 0 && result.length) {
                 result[0].TIME = moment(result[0].TIME).format('YYYY-MM-DD HH:mm:ss');
                 let sellList = [];
                 let buyList = [];
@@ -69,12 +69,12 @@ module.exports = {
             callback (res);
         });
     },
-    setOrderStatus: function (username, callback) {
-        pool.query (orderSqlMap.setOrderStatus, username, function (error, result) {
+    setOrderStatus: function (orderid, status, callback) {
+        pool.query (orderSqlMap.setOrderStatus, [status, orderid], function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
-            res.setData(result[0]);
+            res.setData(result);
             callback (res);
         });
     },

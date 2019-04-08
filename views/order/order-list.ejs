@@ -7,6 +7,7 @@
     <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/js/cookie.js"></script>
+    <script src="/js/common.js"></script>
 
     <script>
         $(function() {
@@ -56,9 +57,12 @@
                 <td><%= item.ORDERID %></td>
                 <td><%= item.STATUS %></td>
                 <td>
-                    <% if (item.STATUS === '待付款') { %>
-                    <span ng-if="tradeOrder.status=='pending'"><a ng-click="agreeTrade(tradeOrder,false)">取消交易</a></span>
-                    <span ng-if="tradeOrder.status=='agree' || tradeOrder.status=='cancel'"><a ng-click="finishTrade(tradeOrder)">确认</a></span>
+                    <% if (item.STATUS === '已下单') { %>
+                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                    <% } else if (item.STATUS === '已确认') { %>
+                        <span><a onclick="setOrderStatus(<%= item.ORDERID %>, '已完成')">确认完成</a></span>
+                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                    <% } else { %>
                     <% } %>
                 </td>
                 <td><a href="/order/detail/<%= item.ORDERID %>">查看</a></td>
@@ -90,9 +94,12 @@
                 <td><%= item.ORDERID %></td>
                 <td><%= item.STATUS %></td>
                 <td>
-                    <% if (item.STATUS === '待付款') { %>
-                    <span ng-if="tradeOrder.status=='pending'"><a ng-click="agreeTrade(tradeOrder,false)">取消交易</a></span>
-                    <span ng-if="tradeOrder.status=='agree' || tradeOrder.status=='cancel'"><a ng-click="finishTrade(tradeOrder)">确认</a></span>
+                    <% if (item.STATUS === '已下单') { %>
+                        <span><a onclick="setOrderStatus(<%= item.ORDERID %>, '已确认')">确认交易</a></span>
+                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                    <% } else if (item.STATUS === '已确认') { %>
+                            <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                    <% } else { %>
                     <% } %>
                 </td>
                 <td><a href="/order/detail/<%= item.ORDERID %>">查看</a></td>

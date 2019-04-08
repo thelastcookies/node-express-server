@@ -7,6 +7,7 @@
     <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
     <script src=/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/js/cookie.js"></script>
+    <script src="/js/common.js"></script>
 
     <script>
         $(function() {
@@ -50,8 +51,8 @@
                     <p>所属分类：<span data-ng-bind="product.category"><%= product.CATG %></span></p>
                     <% if(product.OWNID == localID) { %>
                     <div>
-                        <a href="/product/edit/<%= product.PRODUCTID%>">修改</a>
-                        <a href="#" data-ng-click="delete()">删除</a>
+                        <a href="/products/edit/<%= product.PRODUCTID%>">修改</a>
+                        <a onclick="deleteProduct(<%= product.PRODUCTID%>)">删除</a>
                     </div>
                     <% } else { %>
                         <button on-click="create()" class="btn btn-primary">交易</button>
