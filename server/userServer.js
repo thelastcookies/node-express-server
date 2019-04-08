@@ -7,9 +7,9 @@ const userSqlMap = {
     userAdd: 'insert into user (username, password, mobile) values (?, ?, ?)',
     userVal: 'select userid, password from user where username = ?',
     getUserByName: 'select * from user where username = ?',
-    delUserByName: 'delete from user where username = ?',
     // updateUser: 'update user set username = ?, password = ? where username = ?',
     getUserList: 'select * from user',
+    delUserByName: 'delete from user where username = ?',
 };
 
 module.exports = {

@@ -43,16 +43,19 @@
                     <img id="myImg" style="width: 100%; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;" src=<%= product.PIC %> alt=<% product.PRODUCTNAME %>>>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                    <h3><%= product.PRODUCTNAME %></h3>\
-                    <div data-ng-show="authentication.user._id === product.creator._id">
-                        <a href="/#!/products/offer/{{product._id}}/edit">修改</a>
-                        <a href="#" data-ng-click="delete()">删除</a>
-                    </div>
+                    <h3><%= product.PRODUCTNAME %></h3>
                     <p>上传时间：<span data-ng-bind="product.created | date:'y/MM/dd'"><%= product.TIME %></span></p>
                     <p>上传者：<span data-ng-bind="product.creator.username"><%= product.OWNID %></span></p>
 
                     <p>所属分类：<span data-ng-bind="product.category"><%= product.CATG %></span></p>
-                    <button ng-if="product.creator._id != authentication.user._id" ng-controller="TradeOrderController" ng-click="create()" class="btn btn-primary">交易</button>
+                    <% if(product.OWNID == localID) { %>
+                    <div>
+                        <a href="/product/edit/<%= product.PRODUCTID%>">修改</a>
+                        <a href="#" data-ng-click="delete()">删除</a>
+                    </div>
+                    <% } else { %>
+                        <button on-click="create()" class="btn btn-primary">交易</button>
+                    <% } %>
                     </p>
                 </div>
             </div>

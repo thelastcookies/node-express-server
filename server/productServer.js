@@ -2,6 +2,7 @@ let mysql = require('mysql');
 let mysqlConf = require('../config/mysqlConf');
 let pool = mysql.createPool(mysqlConf.mysql);
 let resResult = require('../config/resConf');
+let moment = require('moment');
 
 
 const productSqlMap = {
@@ -28,7 +29,7 @@ module.exports = {
             res.setErrMsg(error ? error.message: result.message);
             result.forEach(function(item, index) {
                 item.PIC = item.PIC.toString('utf8');
-
+                item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
             });
             res.setData(result);
             callback (res);
@@ -41,6 +42,7 @@ module.exports = {
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             result[0].PIC = result[0].PIC.toString('utf8');
+            result[0].TIME = moment(result[0].TIME).format('YYYY-MM-DD HH:mm:ss');
             res.setData(result[0]);
             callback (res);
         });
@@ -53,6 +55,7 @@ module.exports = {
             res.setErrMsg(error ? error.message: result.message);
             result.forEach(function(item, index) {
                 item.PIC = item.PIC.toString('utf8');
+                item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
             });
             res.setData(result);
             callback (res);

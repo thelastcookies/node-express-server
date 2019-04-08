@@ -14,11 +14,17 @@ router.get('/signin', function(req, res, next) {
 router.get('/signup', function(req, res, next) {
     res.render('signup', { title: 'Express' });
 });
-router.get('/order', function(req, res, next) {
-    res.render('order/order-list', { username: req.cookies.username });
+router.get('/order/:username', function(req, res, next) {
+    let userid = req.cookies.userid;
+    orderServer.getOrderByUSER(userid, function (data) {
+        res.render('order/order-list', { username: req.cookies.username, orderList: data.data });
+    });
 });
-router.get('/order/detail', function(req, res, next) {
-    res.render('order/order-detail', { username: req.cookies.username });
+router.get('/order/detail/:detailid', function(req, res, next) {
+    let detailid = req.params.detailid;
+    orderServer.getOrderDetailById(detailid, function (data) {
+        res.render('order/order-detail', { username: req.cookies.username, orderDetail: data.data });
+    });
 });
 //　主页获取商品列表
 router.get('/productsList', function(req, res, next) {
@@ -49,7 +55,7 @@ router.get('/products/edit/:productid', function(req, res, next) {
 router.get('/products/detail/:productid', function(req, res, next) {
     let productid = req.params.productid;
     productServer.getProductByID(productid, function (productData) {
-        res.render('products/product-detail', { username: req.cookies.username, product: productData.data });
+        res.render('products/product-detail', { username: req.cookies.username, localID: req.cookies.userid, product: productData.data });
     });
 });
 router.get('/user/:username', function(req, res, next) {
