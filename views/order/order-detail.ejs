@@ -11,18 +11,6 @@
 
     <script>
         $(function() {
-            if (getCookie ("username")) {
-                $ ("#personal").css ("display", "block");
-                $ ("#signin").css ("display", "none");
-
-            }
-            else if (!getCookie ("username")) {
-                $ ("#personal").css ("display", "none");
-                $ ("#signin").css ("display", "block");
-            }
-            else {
-                return "";
-            }
         });
     </script>
 </head>

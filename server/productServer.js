@@ -6,16 +6,28 @@ let moment = require('moment');
 
 
 const productSqlMap = {
-    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) select ?, ?, ?, ?, ?, USERID from `user` where USERNAME = ?',
-    getProductById: 'select * from product where PRODUCTID = ?',
+    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE PRODUCTNAME = ?, PRICE = ?, DETAIL = ?',
+    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) select ?, ?, ?, ?, ?, USERID from `user` where USERNAME = ? ON DUPLICATE KEY UPDATE',
+    productUpdateByID: 'update product set PRODUCTNAME = ?, PRICE = ?, DETAIL = ?, PIC = ?, CATG = ? where PRODUCTID = ?',
+    getProductById: 'select product.*, user.USERNAME from product INNER JOIN user on product.OWNID = user.USERID where PRODUCTID = ? ',
     getProductsByUSER: 'select * from product where OWNID = (select USERID from user where username = ?)',
-    getProductsList: 'select * from product',
+    getProductsList: 'select product.*, user.USERNAME from product INNER JOIN user on product.OWNID = user.USERID',
+    // getProductsList: 'select * from product',
+
     delProductById: 'delete from product where PRODUCTID = ?',
 };
 
 module.exports = {
     productAdd: function (productData, callback) {
         pool.query (productSqlMap.productAdd, [productData.name, productData.price, productData.details, productData.image, productData.category, productData.username], function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            callback (res);
+        });
+    },
+    productUpdate: function(productData, callback) {
+        pool.query (productSqlMap.productUpdate, [productData.name, productData.price, productData.details, productData.image, productData.category, productData.username], function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);

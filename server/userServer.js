@@ -5,9 +5,10 @@ let resResult = require('../config/resConf');
 
 const userSqlMap = {
     userAdd: 'insert into user (username, password, mobile) values (?, ?, ?)',
+    userUpdateByID: 'update user set username = ?, password = ?, mobile = ?, address = ?, wechat = ?, qq = ? where userid = ?',
     userVal: 'select userid, password from user where username = ?',
     getUserByName: 'select * from user where username = ?',
-    // updateUser: 'update user set username = ?, password = ? where username = ?',
+    // userUpdateByID: 'call user_update (?)',
     getUserList: 'select * from user',
     delUserByName: 'delete from user where username = ?',
 };
@@ -49,6 +50,14 @@ module.exports = {
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             res.setData(result[0]);
+            callback (res);
+        });
+    },
+    userUpdate: function (userData, callback) {
+        pool.query (userSqlMap.userUpdateByID, [userData.username, userData.password, userData.mobile, userData.address, userData.wechat, userData.qq, userData.userid], function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
             callback (res);
         });
     }

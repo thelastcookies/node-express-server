@@ -12,22 +12,6 @@
     <script>
         let imgSrc = null;
         $(function() {
-            if (getCookie ("username")) {
-                $ ("#personal").css ("display", "block");
-                $ ("#signin").css ("display", "none");
-
-            }
-            else if (!getCookie ("username")) {
-                $ ("#personal").css ("display", "none");
-                $ ("#signin").css ("display", "block");
-            }
-            else {
-                return "";
-            }
-
-            // let catg = $("#category").val();
-            // $("option[value='"+ catg +"']").attr("selected","selected")
-
             $("#submit").on("click", function (e) {
                 e.preventDefault();
                 let name = $("#name").val();
@@ -51,9 +35,9 @@
                         "Access-Control-Allow-Origin":"http://example.edu",
                         "Access-Control-Allow-Headers":"X-Requested-With"
                     },
-                    success: function (status) {
-                        console.log(status);
-                        if (status) {
+                    success: function (data) {
+                        console.log(data);
+                        if (data.status) {
                             alert ("商品添加错误！");
                             return ;
                         }

@@ -2,7 +2,7 @@ function setCookie(c_name, value, expiredays)
 {
     let exdate = new Date();
     exdate.setDate(exdate.getDate() + expiredays);
-    document.cookie = c_name + "=" + encodeURIComponent(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    document.cookie = c_name + "=" + encodeURIComponent(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString() + "; Domain=localhost; path=/;");
 }
 
 function getCookie(c_name)
