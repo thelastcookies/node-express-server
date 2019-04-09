@@ -37,20 +37,20 @@
             </tr>
             </thead>
             <tbody style="color: gray;">
-            <% orderList.buyList.forEach(function (item, index) { %>
+            <% if (orderList) orderList.buyList.forEach(function (item, index) { %>
             <tr>
                 <td><%= item.PRODUCTNAME %></td>
                 <td><%= item.PRODUCTID %></td>
-                <td><%= item.OWNERID %></td>
+                <td><%= item.USERNAME %></td>
                 <td><%= item.TIME %></td>
                 <td><%= item.ORDERID %></td>
                 <td><%= item.STATUS %></td>
                 <td>
                     <% if (item.STATUS === '已下单') { %>
-                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                        <span><a href="#" onclick="orderDrop(<%= item.ORDERID %>)">取消交易</a></span>
                     <% } else if (item.STATUS === '已确认') { %>
-                        <span><a onclick="setOrderStatus(<%= item.ORDERID %>, '已完成')">确认完成</a></span>
-                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                        <span><a href="#" onclick="setOrderStatus(<%= item.ORDERID %>, '已完成')">确认完成</a></span>
+                        <span><a href="#" onclick="orderDrop(<%= item.ORDERID %>)">取消交易</a></span>
                     <% } else { %>
                     <% } %>
                 </td>
@@ -74,20 +74,20 @@
             </tr>
             </thead>
             <tbody style="color: gray;">
-            <% orderList.sellList.forEach(function (item, index) { %>
+            <% if (orderList) orderList.sellList.forEach(function (item, index) { %>
             <tr>
                 <td><%= item.PRODUCTNAME %></td>
                 <td><%= item.PRODUCTID %></td>
-                <td><%= item.BUYERID %></td>
+                <td><%= item.USERNAME %></td>
                 <td><%= item.TIME %></td>
                 <td><%= item.ORDERID %></td>
                 <td><%= item.STATUS %></td>
                 <td>
                     <% if (item.STATUS === '已下单') { %>
-                        <span><a onclick="setOrderStatus(<%= item.ORDERID %>, '已确认')">确认交易</a></span>
-                        <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                        <span><a href="#" onclick="setOrderStatus(<%= item.ORDERID %>, '已确认')">确认交易</a></span>
+                        <span><a href="#" onclick="orderDrop(<%= item.ORDERID %>)">取消交易</a></span>
                     <% } else if (item.STATUS === '已确认') { %>
-                            <span><a onclick="orderCancel(<%= item.ORDERID %>)">取消交易</a></span>
+                            <span><a href="#" onclick="orderDrop(<%= item.ORDERID %>)">取消交易</a></span>
                     <% } else { %>
                     <% } %>
                 </td>

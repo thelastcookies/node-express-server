@@ -24,12 +24,12 @@
         <div class="content">
             <div class="row">
                 <div style="margin-bottom: 15px;">
-                    <a onclick="window.history.go(-1);">&lt;返回上一页</a>
+                    <a href="#" onclick="window.history.go(-1);">&lt;返回上一页</a>
                 </div>
             </div>
             <div class="row">
                 <div style="width: 360px;height: 270px; position: relative;background-color: #f8f8f8; overflow: hidden;" title="点击看大图" class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                    <img id="myImg" style="width: 100%; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;" src=<%= product.PIC %> alt=<% product.PRODUCTNAME %>>>
+                    <img id="myImg" style="width: 100%; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;" src="<%= product.PIC %>" alt="<% product.PRODUCTNAME %>">
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                     <h3><%= product.PRODUCTNAME %></h3>
@@ -37,13 +37,14 @@
                     <p>上传者：<span data-ng-bind="product.creator.username"><%= product.USERNAME %></span></p>
 
                     <p>所属分类：<span data-ng-bind="product.category"><%= product.CATG %></span></p>
-                    <% if(product.OWNID == localID) { %>
+                    <% if(product.OWNID == localUserID) { %>
                     <div>
                         <a href="/products/edit/<%= product.PRODUCTID%>">修改</a>
-                        <a onclick="deleteProduct(<%= product.PRODUCTID%>)">删除</a>
+                        <a href="#" onclick="deleteProduct(<%= product.PRODUCTID%>)">删除</a>
                     </div>
                     <% } else { %>
-                        <button on-click="create()" class="btn btn-primary">交易</button>
+
+                            <button onclick="orderCreate(<%= product.PRODUCTID %>, <%= product.OWNID %>, <%= localUserID %>)" class="btn btn-primary">交易</button>
                     <% } %>
                     </p>
                 </div>

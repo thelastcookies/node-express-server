@@ -6,54 +6,54 @@ let moment = require('moment');
 
 
 const productSqlMap = {
-    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE PRODUCTNAME = ?, PRICE = ?, DETAIL = ?',
-    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) select ?, ?, ?, ?, ?, USERID from `user` where USERNAME = ? ON DUPLICATE KEY UPDATE',
+    productAdd: 'insert into product (PRODUCTNAME, PRICE, DETAIL, PIC, CATG, OWNID) values(?, ?, ?, ?, ?, ?)',
     productUpdateByID: 'update product set PRODUCTNAME = ?, PRICE = ?, DETAIL = ?, PIC = ?, CATG = ? where PRODUCTID = ?',
     getProductById: 'select product.*, user.USERNAME from product INNER JOIN user on product.OWNID = user.USERID where PRODUCTID = ? ',
     getProductsByUSER: 'select * from product where OWNID = (select USERID from user where username = ?)',
-    getProductsList: 'select product.*, user.USERNAME from product INNER JOIN user on product.OWNID = user.USERID',
-    // getProductsList: 'select * from product',
-
+    getProductsList: 'select product.*, user.USERNAME from product INNER JOIN user on product.OWNID = user.USERID WHERE product.STATUS = "已发布"',
     delProductById: 'delete from product where PRODUCTID = ?',
 };
 
 module.exports = {
+    // 新建商品
     productAdd: function (productData, callback) {
-        pool.query (productSqlMap.productAdd, [productData.name, productData.price, productData.details, productData.image, productData.category, productData.username], function (error, result) {
+        pool.query (productSqlMap.productAdd, [productData.productName, productData.price, productData.details, productData.image, productData.category, productData.userid], function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             callback (res);
         });
     },
+    // 修改商品
     productUpdate: function(productData, callback) {
-        pool.query (productSqlMap.productUpdate, [productData.name, productData.price, productData.details, productData.image, productData.category, productData.username], function (error, result) {
+        pool.query (productSqlMap.productUpdateByID, [productData.productName, productData.price, productData.details, productData.image, productData.category, productData.productId], function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             callback (res);
         });
     },
+    // 获取所有商品的列表
     productList: function (callback) {
         pool.query (productSqlMap.getProductsList, '', function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             result.forEach(function(item, index) {
-                item.PIC = item.PIC.toString('utf8');
+                item.PIC = result[0].PIC.length ? item.PIC.toString('utf8') : '';
                 item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
             });
             res.setData(result);
             callback (res);
         });
     },
-    // 单个商品
+    // 获取单个商品信息
     getProductByID: function (productID, callback) {
         pool.query (productSqlMap.getProductById, productID, function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
-            result[0].PIC = result[0].PIC.toString('utf8');
+            result[0].PIC = result[0].PIC.length ? result[0].PIC.toString('utf8') : '';
             result[0].TIME = moment(result[0].TIME).format('YYYY-MM-DD HH:mm:ss');
             res.setData(result[0]);
             callback (res);
@@ -66,13 +66,23 @@ module.exports = {
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
             result.forEach(function(item, index) {
-                item.PIC = item.PIC.toString('utf8');
+                item.PIC = result[0].PIC.length ? item.PIC.toString('utf8') : 0;
                 item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
             });
             res.setData(result);
             callback (res);
         });
-    }
+    },
+    // 删除商品
+    delProductById: function (productid, callback) {
+        pool.query (productSqlMap.delProductById, productid, function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            res.setData(result);
+            callback (res);
+        });
+    },
 
 };
 

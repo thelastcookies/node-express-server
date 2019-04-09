@@ -94,30 +94,47 @@ router.get('/products/edit/:productid', function(req, res, next) {
         res.render('products/product-edit', { username: req.cookies.username, product: productData.data });
     });
 });
-router.get('/productUpdate', function (req, res, next) {
-
-})
-// 查看商品详情
-router.get('/products/detail/:productid', function(req, res, next) {
-    let productid = req.params.productid;
-    productServer.getProductByID(productid, function (productData) {
-        res.render('products/product-detail', { username: req.cookies.username, localID: req.cookies.userid, product: productData.data });
-    });
-});
-// 商品新建和修改
-router.post('/productModify', function(req, res, next) {
-    console.log(req);
+// 新建商品
+router.post('/newProduct', function (req, res, next) {
     let productData = {
-        name: req.body.name,
+        productName: req.body.productName,
         category: req.body.category,
         price: req.body.price,
         details: req.body.details,
         image: req.body.image,
-        username: req.body.username
+        userid: req.body.userid
     };
     productServer.productAdd(productData, function (data) {
         res.send (data);
-    })
+    });
+});
+// 编辑商品
+router.post('/productUpdate', function (req, res, next) {
+    let productData = {
+        productName: req.body.productName,
+        category: req.body.category,
+        price: req.body.price,
+        details: req.body.details,
+        image: req.body.image,
+        productId: req.body.productId
+    };
+    productServer.productUpdate(productData, function (data) {
+        res.send (data);
+    });
+});
+// 查看商品详情
+router.get('/products/detail/:productid', function(req, res, next) {
+    let productid = req.params.productid;
+    productServer.getProductByID(productid, function (productData) {
+        res.render('products/product-detail', { username: req.cookies.username, localUserID: req.cookies.userid, product: productData.data });
+    });
+});
+// 删除商品
+router.get('/delProductById', function(req, res, next) {
+    let productid = req.query.productid;
+    productServer.delProductById(productid, function (data) {
+        res.send (data);
+    });
 });
 
 router.get('/order/:username', function(req, res, next) {
@@ -132,6 +149,14 @@ router.get('/order/detail/:detailid', function(req, res, next) {
         res.render('order/order-detail', { username: req.cookies.username, orderDetail: data.data });
     });
 });
+router.post('/orderCreate', function (req, res, next) {
+    let productId = req.body.productId;
+    let ownerId = req.body.ownerId;
+    let buyerId = req.body.buyerId;
+    orderServer.orderCreate(productId, ownerId, buyerId, function (data) {
+        res.send (data);
+    });
+});
 router.get('/setOrderStatus', function(req, res, next) {
     let order_id = req.query.order_id;
     let order_status = req.query.order_status;
@@ -139,7 +164,12 @@ router.get('/setOrderStatus', function(req, res, next) {
         res.send (data);
     });
 });
-
+router.get('/orderDrop', function(req, res, next) {
+    let orderId = req.query.orderId;
+    orderServer.orderDrop(orderId, function (data) {
+        res.send (data);
+    });
+});
 router.get('/error', function(req, res, next) {
     res.render('error.ejs', { username: req.cookies.username });
 });

@@ -6,16 +6,16 @@ let moment = require('moment');
 
 
 const orderSqlMap = {
-    orderCreate: 'insert into `order` (productname, produciid, ownerid, buyerid, status) values (?, ?, ?, ?, ?)',
+    orderCreate: 'call order_create (?, ?, ?)',
     getOrderDetailById: 'call order_detail (?)',
-    getOrderByUSER: 'select * from `order` where ownerid = ? or buyerid = ?',
+    getOrderByUSER: 'call get_order_by_user(?)',
     setOrderStatus: 'update `order` set status = ? where orderid = ?',
-    delOrderById: 'delete from `order` where orderid = ?',
+    orderDrop: 'call order_drop (?)',
 };
 
 module.exports = {
-    orderCreate: function (username, password, callback) {
-        pool.query (orderSqlMap.orderCreate, username, function (error, result) {
+    orderCreate: function (productId, ownerId, buyerId, callback) {
+        pool.query (orderSqlMap.orderCreate, [productId, ownerId, buyerId], function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);
@@ -26,6 +26,30 @@ module.exports = {
                 });
             } else {
                 res.setData({status: false});
+            }
+            callback (res);
+        });
+    },
+    getOrderByUSER: function (userID, callback) {
+        pool.query (orderSqlMap.getOrderByUSER, userID, function (error, result) {
+            let res = new resResult();
+            res.setStatus(error ? error.errno : 0);
+            res.setErrMsg(error ? error.message: result.message);
+            if (res.status === 0 && result.length) {
+                // result[0].TIME = moment(result[0].TIME).format('YYYY-MM-DD HH:mm:ss');
+                // result[1].TIME = moment(result[1].TIME).format('YYYY-MM-DD HH:mm:ss');
+                let buyList = result[0];
+                let sellList = result[1];
+                buyList.forEach(function (item) {
+                    item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
+                });
+                sellList.forEach(function (item) {
+                    item.TIME = moment(item.TIME).format('YYYY-MM-DD HH:mm:ss');
+                });
+                res.setData({
+                    sellList: sellList,
+                    buyList: buyList
+                });
             }
             callback (res);
         });
@@ -46,29 +70,6 @@ module.exports = {
             callback (res);
         });
     },
-    getOrderByUSER: function (userID, callback) {
-        pool.query (orderSqlMap.getOrderByUSER, [userID, userID], function (error, result) {
-            let res = new resResult();
-            res.setStatus(error ? error.errno : 0);
-            res.setErrMsg(error ? error.message: result.message);
-            if (res.status === 0 && result.length) {
-                result[0].TIME = moment(result[0].TIME).format('YYYY-MM-DD HH:mm:ss');
-                let sellList = [];
-                let buyList = [];
-                result.forEach(function (item, index) {
-                    if (item.OWNERID == userID)
-                        sellList.push(item);
-                    else
-                        buyList.push(item);
-                });
-                res.setData({
-                    sellList: sellList,
-                    buyList: buyList
-                });
-            }
-            callback (res);
-        });
-    },
     setOrderStatus: function (orderid, status, callback) {
         pool.query (orderSqlMap.setOrderStatus, [status, orderid], function (error, result) {
             let res = new resResult();
@@ -78,8 +79,8 @@ module.exports = {
             callback (res);
         });
     },
-    delOrderById: function (username, callback) {
-        pool.query (orderSqlMap.delOrderById, username, function (error, result) {
+    orderDrop: function (orderId, callback) {
+        pool.query (orderSqlMap.orderDrop, orderId, function (error, result) {
             let res = new resResult();
             res.setStatus(error ? error.errno : 0);
             res.setErrMsg(error ? error.message: result.message);

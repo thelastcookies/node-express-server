@@ -50,7 +50,7 @@
                 <th>物品图片</th>
                 <th>物品名称</th>
                 <th>编号</th>
-<!--                <th>状态</th>-->
+                <th>状态</th>
                 <th>价格</th>
                 <th>操作</th>
             </tr>
@@ -59,14 +59,14 @@
             <% userProducts.forEach (function(item, index){ %>
             <tr style="vertical-align: center;">
                 <td><img src="<%= item.PIC %>" style="max-height:80px;max-width:80px;"></td>
-                <td ng-bind="product.name"><%= item.PRODUCTNAME %></td>
-                <td ng-bind="product._id"><%= item.PRODUCTID %></td>
-<!--                <td ng-bind="product.status"></td>-->
-                <td ng-bind="product.price"><%= item.PRICE %></td>
+                <td><%= item.PRODUCTNAME %></td>
+                <td><%= item.PRODUCTID %></td>
+                <td><%= item.STATUS %></td>
+                <td><%= item.PRICE %></td>
                 <td>
                     <a href="/products/detail/<%= item.PRODUCTID %>">查看</a>
                     <a href="/products/edit/<%= item.PRODUCTID %>">修改</a>
-                    <a onclick="deleteProduct(<%= item.PRODUCTID%>)">删除</a>
+                    <a href = "#" onclick="deleteProduct(<%= item.PRODUCTID%>)">删除</a>
                 </td>
             </tr>
             <% }); %>
