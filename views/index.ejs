@@ -40,12 +40,12 @@
                         $("#product-empty").css("display", "none");
                         let htmlStr = '';
                         dataArr.forEach(function (item, index) {
-                            htmlStr += '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"><article class="my-item"><a href="/products/detail/' + item.PRODUCTID
+                            htmlStr += '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 product-container"><article class="my-item"><a href="/products/detail/' + item.PRODUCTID
                                 + '"><div class="my-img-wrap"><img src="' + item.PIC + '" alt="' + item.PRODUCTNAME
                                 + '"></div></a><div class="my-summary"><a href="/products/' + item.PRODUCTID
-                                + '"><h4 class="cutOff">' + item.PRODUCTNAME + '</h4></a><p><span class="my-price">￥<span id="price">' + item.PRICE
+                                + '"><h4 class="cutOff" id="title">' + item.PRODUCTNAME + '</h4></a><p><span class="my-price">￥<span id="price">' + item.PRICE
                                 + '</span></span><span class="creator"> / <span id="username">' + item.USERNAME
-                                + '</span></span></p><p class="cutOff" id="details">' + item.DETAIL
+                                + '</span></span></p><p id="catg">' + item.CATG + '</p><p class="cutOff" id="details">' + item.DETAIL
                                 + '</p></div></article></div>';
                         });
                         $("#product-list-container").html(htmlStr);
@@ -56,6 +56,10 @@
                     console.log (textStatus);
                     console.log (errorThrown);
                 }
+            });
+
+            $("#search").on("click", function () {
+                filterProduct($(".product-container"), $("#category").val(), $("#name").val());
             });
         });
     </script>
@@ -84,13 +88,13 @@
                     </select>
                 </div>
             </div>
-            <button type="button" class="btn btn-default">查找</button>
+            <button id="search" type="button" class="btn btn-default">查找</button>
         </form>
 </section>
 
 <div class="container content" id="list-products">
     <div id="product-empty">
-        还没有物品，你要 <a ng-click="renderCreate()" class="createProduct">创建一个</a>吗？
+        还没有物品，你要 <a href="/products/edit">创建一个</a>吗？
         <!--还没有物品，你要 <a href="/#!/createRoute">创建一个</a>吗？-->
     </div>
     <div class="row my-container" id="product-list-container">

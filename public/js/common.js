@@ -4,6 +4,22 @@ function signOut () {
     window.location.href = "/";
 }
 
+/**
+ * 商品筛选
+ */
+function filterProduct (nodeList, catg, text) {
+    nodeList.each(function () {
+        if(this.tagName === 'div')
+            $(this).css('display', 'block');
+        else
+            $(this).css('display', 'table-row');
+
+    });
+    nodeList.not(function (index) {
+        return catg ? $(this).find('#catg').text() === catg && $(this).find('#title').text().match(text) : $(this).find('#title').text().match(text);
+    }).css('display', 'none');
+}
+
 // 删除商品
 function deleteProduct (product_id) {
     $.ajax({
