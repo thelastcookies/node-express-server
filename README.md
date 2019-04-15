@@ -6,6 +6,6 @@ node+express server
 3. 安装 mysql。
 4. cd 到文件根目录下，运行 npm install。
 5. 在 /config/mysqlConf 中配置数据库信息。
-6. 在数据库中 /sql/appdb 中的数据库脚本文件。
+6. 在数据库运行 /sql/appdb 中的数据库脚本文件。
 7. 在根目录下 运行 npm start 启动服务器。
 8. 在浏览器中打开 localhost:3000 运行项目。
