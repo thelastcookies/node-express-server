@@ -16,7 +16,7 @@ function filterProduct (nodeList, catg, text) {
 
     });
     nodeList.not(function (index) {
-        return catg ? $(this).find('#catg').text() === catg && $(this).find('#title').text().match(text) : $(this).find('#title').text().match(text);
+        return catg ? $(this).find('#catg').text() === catg && ($(this).find('#title').text().match(text) || $(this).find('#username').text().match(text)) : ($(this).find('#title').text().match(text) || $(this).find('#username').text().match(text));
     }).css('display', 'none');
 }
 
